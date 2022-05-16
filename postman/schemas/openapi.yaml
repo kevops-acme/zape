@@ -1,0 +1,56 @@
+openapi: 3.0.0
+
+info:
+  version: '1.0.0'
+  title: 'acme'
+  license:
+    name: MIT
+
+servers:
+  - url: 'localhost:3000'
+
+paths:
+    /v1/insurances:
+        post:
+            summary: 'Create insurance'
+            operationId: createInsurance
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Insurance'
+                            example:
+                                holderId: 'c3afc6b5-6d12-4635-b4cf-bd2913db1d67'
+                                holderName: 'Ruben'
+                                type: 'Home'
+                                amount: 600,34€
+            responses:
+                '201':
+                    description: 'Create insurance'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/InsuranceId'
+                                example:
+                                    insuranceId: '777fc6b5-6d12-4635-b4cf-bd2913db1d67'
+
+components:
+    schemas:
+        InsuranceId:
+            type: object
+            properties:
+                insuranceId:
+                    type: string
+        Insurance:
+            type: object
+            properties:
+                holderId:
+                    type: string
+                    format: uuid
+                holderName:
+                    type: string
+                type:
+                    type: string
+                    enum: ['Home', 'Car']
+                amount:
+                    type: string
