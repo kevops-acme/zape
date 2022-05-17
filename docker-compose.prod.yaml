@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:  
+  mongodb:
+    image: mongo:4.4.4-bionic
+    ports:
+      - ${MONGO_EXTERNAL_PORT}:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    networks:
+      - net
+
+  app:
+    image: kevopsacademy/zape-app:$TAG
+    ports:
+    - 8080:8080
+    environment:
+      - MONGO_URL=${MONGO_URL}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASS=${MONGO_PASS}
+      - MONGO_AUTH_SOURCE=${MONGO_AUTH_SOURCE}
+    restart: always
+    networks:
+      - net
+
+networks:
+  net:
