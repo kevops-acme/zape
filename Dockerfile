@@ -1,13 +1,29 @@
-FROM node:16.14.2-alpine3.15
+FROM node:16.15.0-alpine3.15 as builder
 
-WORKDIR /usr/src/app
+ENV NODE_ENV build
 
-COPY package.json /usr/src/app/
+WORKDIR /home/node
 
-RUN npm install
+COPY . /home/node
 
-COPY dist .
+RUN chown node:node /home/node -R
 
-EXPOSE 3000
+USER node
+RUN npm ci \
+    && npm run build \
+    && npm prune --production
 
-CMD [ "node", "main" ]
+# ---
+
+FROM node:16.15.0-alpine3.15
+
+ENV NODE_ENV production
+
+USER node
+WORKDIR /home/node
+
+COPY --from=builder /home/node/package*.json /home/node/
+COPY --from=builder /home/node/node_modules/ /home/node/node_modules/
+COPY --from=builder /home/node/dist/ /home/node/dist/
+
+CMD ["node", "dist/main.js"]
