@@ -33,7 +33,7 @@ function deploy() {
             ssh_opts="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
             ssh -T $ssh_opts "$target" "mkdir app"
             rsync -avpP -e "ssh $ssh_opts" docker-compose.prod.yaml "$target:~/app/docker-compose.yaml"
-            rsync -avpP -e "ssh $ssh_opts" .env.example "$target:~/app/.env"
+            rsync -avpP -e "ssh $ssh_opts" .env "$target:~/app/.env"
             docker save "kevopsacademy/zape-app:$TAG" | ssh -T $ssh_opts "$target" "docker load"
             ssh -T $ssh_opts "$target" "cd app && docker-compose up -d"
             ;;
