@@ -31,6 +31,8 @@ function build-docker() {
         exec)
             TAG=$(getVersion)
             docker build -t kevopsacademy/zape-app:"$TAG" .
+            cp .env.example .env
+            sed "s/^TAG=.*/TAG=$TAG/g" .env -i
             ;;
         *)
             showNotImplemtedMessage "$1" "${FUNCNAME[0]}"
