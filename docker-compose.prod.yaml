@@ -1,29 +1,35 @@
-version: '3.7'
+version: '2.4'
 
 services:  
   mongodb:
     image: mongo:4.4.4-bionic
-    ports:
-      - ${MONGO_EXTERNAL_PORT}:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
-    networks:
-      - net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", 'mongo --port 27017 --eval "rs.status()" | grep -vq "REMOVED"']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app:
-    image: kevopsacademy/zape-app:$TAG
+    image: kevopsacademy/zape-app:${TAG-latest}
     ports:
-    - 8080:8080
+    - 3000:3000
     environment:
       - MONGO_URL=${MONGO_URL}
       - MONGO_USER=${MONGO_USER}
       - MONGO_PASS=${MONGO_PASS}
       - MONGO_AUTH_SOURCE=${MONGO_AUTH_SOURCE}
-    restart: always
-    networks:
-      - net
-
-networks:
-  net:
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sS --fail localhost:3000  > /dev/null 2>&1 || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
