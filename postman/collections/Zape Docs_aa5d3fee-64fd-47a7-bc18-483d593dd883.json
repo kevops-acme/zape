@@ -1,0 +1,99 @@
+{
+	"info": {
+		"_postman_id": "27919daf-55af-4662-8004-e662c67713cb",
+		"name": "Zape Docs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create insurance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ebe9afec-3e9f-409c-b07f-09772f14ae7b",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "eed815ff-d806-437f-8705-b7d475d3cd17",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrlZape}}/v1/insurances",
+					"host": [
+						"{{baseUrlZape}}"
+					],
+					"path": [
+						"v1",
+						"insurances"
+					]
+				}
+			},
+			"response": [
+				{
+					"id": "ca7679bc-3999-4434-8fa7-22d5a4d0d4c7",
+					"name": "Create insurance",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"holderId\": \"<uuid>\",\n  \"holderName\": \"<string>\",\n  \"type\": \"<string>\",\n  \"amount\": \"<string>\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/insurances",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"insurances"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n  \"insuranceId\": \"<string>\"\n}"
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"id": "cd2966d4-4cd6-4e07-9e29-c5a9713355eb",
+			"key": "baseUrl",
+			"value": "localhost:3000",
+			"type": "string"
+		}
+	]
+}
