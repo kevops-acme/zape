@@ -1,30 +1,39 @@
 import { Insurance, InsuranceType } from "./../../domain/entities/insurance";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { InsuranceDocument, InsuranceMongo } from "./../../infrastructure/persistence/insurance.schema";
 import { Model } from "mongoose";
+import { InsurancesRepository } from "./../../domain/repositories/insurances.repository";
 
 @Injectable()
 export class AddInsuranceUseCase {
 
-    constructor(@InjectModel(InsuranceMongo.name) private insuranceModel: Model<InsuranceDocument>) {}
+    private readonly logger = new Logger(AddInsuranceUseCase.name);
+
+    constructor(@Inject(InsurancesRepository) private insurancesRepository: InsurancesRepository) {}
 
     async execute(request: AddInsuranceRequest): Promise<AddInsuranceResponse> {
-        
-        const insurance: InsuranceType = {
+
+        try {
+
+            const insurance: InsuranceType = {
             amount: request.amount,
             holderId: request.holderId,
             holderName: request.holderName,
             type: request.type
         }
-        console.log(insurance);
-        const createdInsurance = new this.insuranceModel(insurance);
-        const result = await createdInsurance.save();
-        const insuranceId = result._id;
+        this.logger.log(insurance);
+        const insuranceId = await this.insurancesRepository.createInsurance(new Insurance(insurance));
 
         return {
             insuranceCode: insuranceId
         }
+
+        }catch(e) {
+            this.logger.error(e);
+        }
+        
+        
     }
 
 }

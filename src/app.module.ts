@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AddInsuranceUseCase } from './application/insurances/add-insurance.usecase';
-import { InsuranceMongo, InsuranceSchema } from 'src/infrastructure/persistence/insurance.schema';
+import { InsuranceMongo, InsuranceSchema } from './infrastructure/persistence/insurance.schema';
 import { InsuranceController } from './infrastructure/rest/insurance.controller';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { InsurancesRepository } from './domain/repositories/insurances.repository';
+import { InsurancesMongoAdapter } from './infrastructure/persistence/insurances.mongo.adapter';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { AppService } from './app.service';
     MongooseModule.forFeature([{name: InsuranceMongo.name, schema: InsuranceSchema}])
   ],
   controllers: [AppController, InsuranceController],
-  providers: [AppService, AddInsuranceUseCase],
+  providers: [AppService, AddInsuranceUseCase, {
+    provide: InsurancesRepository, useClass: InsurancesMongoAdapter
+  }],
 })
 export class AppModule {}

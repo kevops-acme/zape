@@ -1,21 +1,22 @@
-import { Prop, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
 export type InsuranceDocument = InsuranceMongo & Document;
 
+@Schema()
 export class InsuranceMongo {
 
     @Prop()
-    holderId: string;
+    holderId: String;
 
     @Prop()
-    holderName: string;
+    holderName: String;
 
     @Prop()
-    type: string;
+    type: String;
 
     @Prop()
-    amount: string;
+    amount: String;
 
 }
 
