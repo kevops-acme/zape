@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { InsurancesRepository } from './domain/repositories/insurances.repository';
 import { InsurancesMongoAdapter } from './infrastructure/persistence/insurances.mongo.adapter';
+import { GetInsuranceHolderUseCase } from './application/insurances/get-insurance-holder.usecase';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { InsurancesMongoAdapter } from './infrastructure/persistence/insurances.
     MongooseModule.forFeature([{name: InsuranceMongo.name, schema: InsuranceSchema}])
   ],
   controllers: [AppController, InsuranceController],
-  providers: [AppService, AddInsuranceUseCase, {
+  providers: [AppService, AddInsuranceUseCase, GetInsuranceHolderUseCase, {
     provide: InsurancesRepository, useClass: InsurancesMongoAdapter
   }],
 })

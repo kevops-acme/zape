@@ -7,16 +7,16 @@ export type InsuranceDocument = InsuranceMongo & Document;
 export class InsuranceMongo {
 
     @Prop()
-    holderId: String;
+    holderId: string;
 
     @Prop()
-    holderName: String;
+    holderName: string;
 
     @Prop()
-    type: String;
+    type: string;
 
     @Prop()
-    amount: String;
+    amount: string;
 
 }
 

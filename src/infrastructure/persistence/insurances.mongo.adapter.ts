@@ -1,7 +1,7 @@
 
 import { Insurance } from "./../../domain/entities/insurance";
 import { InsurancesRepository } from "../../domain/repositories/insurances.repository";
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { InsuranceDocument, InsuranceMongo } from "./../../infrastructure/persistence/insurance.schema";
 import { Model } from "mongoose";
@@ -23,6 +23,24 @@ export class InsurancesMongoAdapter implements InsurancesRepository {
         const result = await createdInsurance.save();
         return '' + result._id;
 
+    }
+
+    async getByHolderId(holderId: string): Promise<Insurance> {
+        const insuranceDocs: InsuranceDocument[] = await this.insuranceModel.find({holderId});
+        if (insuranceDocs.length == 0) {
+            throw new NotFoundException();
+        }
+        return new Promise(resolve => {
+            const insurance: Insurance = new Insurance({
+                amount: insuranceDocs[0].amount,
+                holderId: insuranceDocs[0].holderId,
+                holderName: insuranceDocs[0].holderName,
+                type: insuranceDocs[0].type
+            })
+            console.log(insurance);
+         resolve(insurance);   
+        })
+        
     }
 
 }
